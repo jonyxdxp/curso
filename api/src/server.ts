@@ -21,7 +21,7 @@ import dashboardRoutes from './routes/dashboard';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 10000;
 
 // Rate limiting
 const limiter = rateLimit({
