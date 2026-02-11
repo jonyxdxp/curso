@@ -9,9 +9,12 @@ import Instructor from '../sections/Instructor';
 import Navigation from '../sections/Navigation';
 import { modulesData } from '../App';
 
+// Registrar el plugin de GSAP
 gsap.registerPlugin(ScrollTrigger);
 
-function LandingPage() {
+
+
+const LandingPage: React.FC = () => {
   const mainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
