@@ -114,7 +114,7 @@ npm run dev
 
 ### Frontend (.env)
 ```env
-VITE_API_URL=http://localhost:3001/api
+VITE_API_URL=https://curso-vaip.onrender.com/api
 VITE_STRIPE_PUBLIC_KEY=pk_test_...
 ```
 
