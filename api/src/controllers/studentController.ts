@@ -256,30 +256,30 @@ export const getStudents = asyncHandler(async (req: Request, res: Response) => {
   }
 
   const [estudiantes, total] = await Promise.all([
-    prisma.estudiante.findMany({
-      where,
-      include: {
-        user: {
-          select: {
-            id: true,
-            nombre: true,
-            email: true,
-            avatarUrl: true,
-            estado: true
-          }
-        },
-        progreso: {
-          select: {
-            completudPorcentaje: true
-          }
+  prisma.estudiante.findMany({
+    where,
+    include: {
+      user: {
+        select: {
+          id: true,
+          nombre: true,
+          email: true,
+          avatarUrl: true,
+          estado: true
         }
       },
-      skip,
-      take: limitNum,
-      orderBy: { createdAt: 'desc' }
-    }),
-    prisma.estudiante.count({ where })
-  ]);
+      progreso: {
+        select: {
+          completudPorcentaje: true
+        }
+      }
+    },
+    skip,
+    take: limitNum,
+    orderBy: { fechaInscripcion: 'desc' }  // Changed from createdAt
+  }),
+  prisma.estudiante.count({ where })
+]);
 
   const estudiantesFormateados = estudiantes.map(e => ({
     id: e.id,

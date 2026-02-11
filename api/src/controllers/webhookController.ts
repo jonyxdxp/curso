@@ -26,6 +26,7 @@ export const stripeWebhook = async (req: Request, res: Response) => {
 };
 
 // Webhook para Google Forms
+// Webhook para Google Forms
 export const googleFormsWebhook = async (req: Request, res: Response) => {
   const { nombre, email, telefono, pais, experiencia, interes } = req.body;
 
@@ -46,7 +47,8 @@ export const googleFormsWebhook = async (req: Request, res: Response) => {
             }
           }
         })
-      } as any
+      } as any,
+      () => {}  // Add empty next function
     );
 
     res.json({ success: true });
