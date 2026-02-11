@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Estudiante, EstudianteDetail } from '@/types';
+import type { Estudiante, EstudianteDetail } from '@/types';
 import * as studentApi from '@/services/studentApi';
 
 interface UseStudentsOptions {

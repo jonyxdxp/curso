@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Modulo } from '@/types';
+import type { Modulo } from '@/types';
 import * as moduleApi from '@/services/moduleApi';
 
 export const useModules = (estado?: string) => {

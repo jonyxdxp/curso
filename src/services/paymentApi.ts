@@ -1,5 +1,5 @@
 import { api, handleApiError } from './api';
-import { Pago } from '@/types';
+import type { Pago } from '@/types';
 
 interface PaymentSession {
   sessionId: string;

@@ -1,5 +1,5 @@
 import { api, handleApiError } from './api';
-import { SolicitudAcceso } from '@/types';
+import type { SolicitudAcceso } from '@/types';
 
 interface PaginatedSolicitudes {
   solicitudes: SolicitudAcceso[];

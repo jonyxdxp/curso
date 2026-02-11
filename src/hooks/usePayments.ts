@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Pago } from '@/types';
+import type { Pago } from '@/types';
 import * as paymentApi from '@/services/paymentApi';
 
 export const useCoursePrice = () => {

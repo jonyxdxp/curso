@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useApplications } from '@/hooks/useApplications';
-import { SolicitudAcceso } from '@/types';
+import type { SolicitudAcceso } from '@/types';
 
 const ApplicationsManager: React.FC = () => {
   const [search, setSearch] = useState('');

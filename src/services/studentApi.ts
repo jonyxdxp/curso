@@ -1,5 +1,5 @@
 import { api, handleApiError } from './api';
-import { DashboardEstudiante, ProgresoModulo, Estudiante, EstudianteDetail } from '@/types';
+import type { DashboardEstudiante, ProgresoModulo, Estudiante, EstudianteDetail } from '@/types';
 
 interface PaginatedEstudiantes {
   estudiantes: Estudiante[];

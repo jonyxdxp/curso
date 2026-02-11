@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { SolicitudAcceso } from '@/types';
+import type { SolicitudAcceso } from '@/types';
 import * as applicationApi from '@/services/applicationApi';
 
 interface UseApplicationsOptions {

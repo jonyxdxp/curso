@@ -1,5 +1,5 @@
 import { api, handleApiError } from './api';
-import { DashboardProfesor, ConfiguracionProfesor } from '@/types';
+import type { DashboardProfesor, ConfiguracionProfesor } from '@/types';
 
 interface DashboardSummary {
   estudiantes: {

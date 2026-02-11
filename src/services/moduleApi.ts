@@ -1,5 +1,5 @@
 import { api, handleApiError } from './api';
-import { Modulo } from '@/types';
+import type { Modulo } from '@/types';
 
 export const getModules = async (estado?: string): Promise<Modulo[]> => {
   try {

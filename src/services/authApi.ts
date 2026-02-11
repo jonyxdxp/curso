@@ -1,5 +1,5 @@
 import { api, handleApiError } from './api';
-import { User, AuthTokens, LoginCredentials, RegisterData } from '@/types';
+import type { User, AuthTokens, LoginCredentials, RegisterData } from '@/types';
 
 interface AuthResponse {
   accessToken: string;

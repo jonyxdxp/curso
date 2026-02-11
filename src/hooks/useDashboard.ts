@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { DashboardEstudiante, DashboardProfesor } from '@/types';
+import type { DashboardEstudiante, DashboardProfesor } from '@/types';
 import * as studentApi from '@/services/studentApi';
 import * as adminApi from '@/services/adminApi';
 

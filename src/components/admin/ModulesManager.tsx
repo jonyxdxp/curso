@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { useModules } from '@/hooks/useModules';
 import * as moduleApi from '@/services/moduleApi';
-import { Modulo } from '@/types';
+import type { Modulo } from '@/types';
 
 const ModulesManager: React.FC = () => {
   const { modules, isLoading, refetch } = useModules();

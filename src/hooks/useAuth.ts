@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
-import { LoginCredentials, RegisterData } from '@/types';
+import type { LoginCredentials, RegisterData } from '@/types';
 
 export const useAuth = () => {
   const auth = useAuthContext();
