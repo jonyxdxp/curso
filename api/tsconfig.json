@@ -15,7 +15,7 @@
     "sourceMap": true,
     "moduleResolution": "node"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "create-profesor.js"],
   "exclude": ["node_modules", "dist"]
 }
 

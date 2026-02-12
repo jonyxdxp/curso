@@ -40,10 +40,11 @@ app.use(morgan('dev'));
 app.use(limiter);
 app.use(requestLogger);
 
-// Webhook de Stripe necesita raw body
-app.use('/api/webhooks', express.raw({ type: 'application/json' }));
+// DESPUÉS:
+// Webhook de Stripe necesita raw body (solo para la ruta específica)
+app.use('/api/webhooks/stripe', express.raw({ type: 'application/json' }));
 
-// Body parsing para otras rutas
+// Body parsing para otras rutas (incluyendo el webhook de Google Forms)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
