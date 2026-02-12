@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Backend para la plataforma Poética de la Mirada",
   "main": "dist/server.js",
-  "scripts": {
+"scripts": {
   "dev": "tsx watch src/server.ts",
-  "build": "prisma generate && tsc",
+  "build": "prisma migrate deploy && prisma generate && tsc",
   "start": "node dist/server.js",
   "db:generate": "prisma generate",
   "db:migrate": "prisma migrate dev",
