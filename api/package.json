@@ -3,15 +3,15 @@
   "version": "1.0.0",
   "description": "Backend para la plataforma Poética de la Mirada",
   "main": "dist/server.js",
-"scripts": {
-  "dev": "tsx watch src/server.ts",
-  "build": "prisma migrate deploy && prisma generate && tsc",
-  "start": "node dist/server.js",
-  "db:generate": "prisma generate",
-  "db:migrate": "prisma migrate dev",
-  "db:studio": "prisma studio",
-  "db:seed": "tsx src/utils/seed.ts"
-},
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "prisma migrate deploy && prisma generate && tsc",
+    "start": "node dist/server.js",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:seed": "tsx src/utils/seed.ts"
+  },
   "dependencies": {
     "@prisma/client": "^5.7.0",
     "bcryptjs": "^2.4.3",
