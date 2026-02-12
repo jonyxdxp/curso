@@ -21,6 +21,10 @@ import dashboardRoutes from './routes/dashboard';
 dotenv.config();
 
 const app = express();
+
+// Trust proxy - importante para Render
+app.set('trust proxy', 1);
+
 const PORT = process.env.PORT || 10000;
 
 // Rate limiting
