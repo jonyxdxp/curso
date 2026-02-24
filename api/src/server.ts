@@ -36,9 +36,17 @@ const limiter = rateLimit({
 
 // Middlewares
 app.use(helmet());
+// DESPUÉS:
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'https://curso-nine-psi.vercel.app',
-  credentials: true
+  origin: [
+    'https://curso-nine-psi.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'https://spirited-creativity-production.up.railway.app'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(morgan('dev'));
 app.use(limiter);
