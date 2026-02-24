@@ -66,7 +66,7 @@ export default function EstudianteDetalle() {
       {/* Header */}
       <header className="bg-[#141419] border-b border-[rgba(244,242,236,0.08)] sticky top-0 z-30 h-16 flex items-center px-6 lg:px-8 gap-4">
         <button
-          onClick={() => window.location.href = createPageUrl('ProfessorDashboard')}
+          onClick={() => window.location.href = createPageUrl('#/profesor')}
           className="flex items-center gap-2 text-[#B8B4AA] hover:text-[#C7A36D] transition-colors text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
