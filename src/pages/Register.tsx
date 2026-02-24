@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 
 export default function Register() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get('token');
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token');
   const [form, setForm] = useState({ nombre: '', email: '', password: '', confirmar: '', telefono: '', pais: '' });
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
