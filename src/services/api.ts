@@ -31,7 +31,8 @@ api.interceptors.response.use(
       // Token expirado o inválido
       localStorage.removeItem('poetica_access_token');
       localStorage.removeItem('poetica_refresh_token');
-      window.location.href = '/login';
+      // ✅ Use hash-based redirect so Vercel serves the React app correctly
+      window.location.href = '/#/login';
     }
     return Promise.reject(error);
   }

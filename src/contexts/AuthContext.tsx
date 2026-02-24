@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import type { User, AuthTokens, LoginCredentials, RegisterData } from '@/types';
-
+import type { User, LoginCredentials, RegisterData } from '@/types';
 import * as authApi from '@/services/authApi';
 
 interface AuthContextType {
@@ -34,7 +33,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const userData = await authApi.getProfile();
           setUser(userData);
         } catch (error) {
-          // Token inválido, limpiar
+          // Token inválido, limpiar sin redirigir
+          // (the 401 interceptor in api.ts handles the redirect)
           localStorage.removeItem(TOKEN_KEY);
           localStorage.removeItem(REFRESH_TOKEN_KEY);
         }
@@ -63,7 +63,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
     setUser(null);
-    window.location.href = '/login';
+    // ✅ Use hash-based redirect so Vercel serves React app correctly
+    window.location.href = '/#/login';
   }, []);
 
   const refreshUser = useCallback(async () => {

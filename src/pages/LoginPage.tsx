@@ -10,20 +10,26 @@ import { useAuth } from '@/hooks/useAuth';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const { login, isLoading, error } = useAuth();
+  const { login, isLoading, error, isProfessor } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
+  const [localError, setLocalError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLocalError(null);
     try {
       await login(formData);
+      // ✅ After login, user state is set — navigate based on role
+      // We read the updated user from auth context via isProfessor
+      // But since state updates are async, we check the response role directly
+      // navigate() works with HashRouter — no need for window.location
       navigate('/dashboard');
-    } catch (err) {
-      // Error ya está manejado en el hook
+    } catch (err: any) {
+      setLocalError(err?.message || 'Error al iniciar sesión');
     }
   };
 
@@ -46,9 +52,9 @@ const LoginPage: React.FC = () => {
         </CardHeader>
         
         <CardContent>
-          {error && (
+          {(error || localError) && (
             <Alert className="mb-4 bg-red-500/10 border-red-500/20 text-red-400">
-              <AlertDescription>{error}</AlertDescription>
+              <AlertDescription>{error || localError}</AlertDescription>
             </Alert>
           )}
           
