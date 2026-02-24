@@ -20,12 +20,7 @@ export const getModules = asyncHandler(async (req: Request, res: Response) => {
 
   const modulos = await prisma.modulo.findMany({
     where,
-    orderBy: { orden: 'asc' },
-    include: {
-      contenido: {
-        orderBy: { orden: 'asc' }
-      }
-    }
+    orderBy: { orden: 'asc' }
   });
 
   res.json(modulos);
@@ -36,12 +31,7 @@ export const getModuleById = asyncHandler(async (req: Request, res: Response) =>
   const { id } = req.params;
 
   const modulo = await prisma.modulo.findUnique({
-    where: { id },
-    include: {
-      contenido: {
-        orderBy: { orden: 'asc' }
-      }
-    }
+    where: { id }
   });
 
   if (!modulo) {
@@ -90,6 +80,7 @@ export const createModule = asyncHandler(async (req: Request, res: Response) => 
     descripcion,
     orden,
     moduloPrevioId,
+    contenido,
     duracion,
     objetivos,
     ejercicio,
@@ -117,6 +108,7 @@ export const createModule = asyncHandler(async (req: Request, res: Response) => 
       descripcion,
       orden: finalOrden,
       moduloPrevioId,
+      contenido: contenido || [],
       duracion: duracion || '2 semanas',
       objetivos: objetivos || [],
       ejercicio: ejercicio || {},
@@ -141,6 +133,7 @@ export const updateModule = asyncHandler(async (req: Request, res: Response) => 
     descripcion,
     orden,
     moduloPrevioId,
+    contenido,
     duracion,
     objetivos,
     ejercicio,
@@ -164,6 +157,7 @@ export const updateModule = asyncHandler(async (req: Request, res: Response) => 
       descripcion,
       orden,
       moduloPrevioId,
+      contenido,
       duracion,
       objetivos,
       ejercicio,

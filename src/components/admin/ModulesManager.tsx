@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Edit2, Trash2, Copy, Eye, EyeOff, GripVertical, FileText } from 'lucide-react';
+import { Plus, Edit2, Trash2, Copy, Eye, EyeOff, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,14 +11,11 @@ import { Switch } from '@/components/ui/switch';
 import { useModules } from '@/hooks/useModules';
 import * as moduleApi from '@/services/moduleApi';
 import type { Modulo } from '@/types';
-import ModuleContentManager from './ModuleContentManager';
 
 const ModulesManager: React.FC = () => {
   const { modules, isLoading, refetch } = useModules();
   const [editingModule, setEditingModule] = useState<Partial<Modulo> | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedModuleForContent, setSelectedModuleForContent] = useState<Modulo | null>(null);
-  const [isContentManagerOpen, setIsContentManagerOpen] = useState(false);
 
   const handleCreate = () => {
     setEditingModule({
@@ -83,26 +80,6 @@ const ModulesManager: React.FC = () => {
     }
   };
 
-  const handleOpenContentManager = (modulo: Modulo) => {
-    setSelectedModuleForContent(modulo);
-    setIsContentManagerOpen(true);
-  };
-
-  const handleSaveModuleContent = async (contenido: any) => {
-    if (!selectedModuleForContent) return;
-    try {
-      await moduleApi.updateModule(selectedModuleForContent.id, {
-        ...selectedModuleForContent,
-        contenido
-      });
-      setIsContentManagerOpen(false);
-      refetch();
-    } catch (error) {
-      console.error('Error guardando contenido del módulo:', error);
-      throw error;
-    }
-  };
-
   return (
     <div className="space-y-6">
       <Card className="bg-[#141419] border-[rgba(244,242,236,0.08)]">
@@ -161,15 +138,6 @@ const ModulesManager: React.FC = () => {
                     <Button
                       size="sm"
                       variant="ghost"
-                      onClick={() => handleOpenContentManager(modulo)}
-                      className="text-[#C7A36D]"
-                      title="Gestionar contenido"
-                    >
-                      <FileText className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
                       onClick={() => handleEdit(modulo)}
                       className="text-[#B8B4AA]"
                     >
@@ -198,18 +166,6 @@ const ModulesManager: React.FC = () => {
           )}
         </CardContent>
       </Card>
-
-      {/* Content Manager Dialog */}
-      {selectedModuleForContent && (
-        <Dialog open={isContentManagerOpen} onOpenChange={setIsContentManagerOpen}>
-          <DialogContent className="bg-[#141419] border-[rgba(244,242,236,0.08)] text-[#F4F2EC] max-w-4xl max-h-[90vh] overflow-y-auto">
-            <ModuleContentManager
-              modulo={selectedModuleForContent}
-              onSave={handleSaveModuleContent}
-            />
-          </DialogContent>
-        </Dialog>
-      )}
 
       {/* Edit Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

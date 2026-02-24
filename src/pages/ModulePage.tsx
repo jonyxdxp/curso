@@ -18,7 +18,6 @@ import {
   Upload
 } from 'lucide-react';
 import { modulesData } from '../App';
-import ModuleContentViewer from '../components/ModuleContentViewer';
 
 const ModulePage = () => {
   const { moduleId } = useParams<{ moduleId: string }>();
@@ -268,19 +267,10 @@ const ModulePage = () => {
             </ul>
           </section>
 
-          {/* Module Content Viewer */}
-          <section className="animate-in mb-12">
-            <ModuleContentViewer
-              titulo="Contenido del módulo"
-              contenidos={module.contenido || []}
-              completudPorcentaje={completed ? 100 : 0}
-            />
-          </section>
-
           {/* Content Blocks */}
           <section className="animate-in mb-12">
             <h2 className="font-serif text-2xl text-[#F4F2EC] mb-6">
-              Materiales adicionales
+              Contenido del módulo
             </h2>
             <div className="space-y-8">
               {module.content.map((block, index) => {
