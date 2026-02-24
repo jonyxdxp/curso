@@ -21,9 +21,9 @@ const SECTIONS = [
 ];
 
 export default function ProfessorDashboard() {
-  const [section, setSection] = useState('overview');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showNotif, setShowNotif] = useState(false);
+  const [section, setSection] = useState<string>('overview');
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const [showNotif, setShowNotif] = useState<boolean>(false);
 
   const pendientes = SOLICITUDES_MOCK.filter(s => s.estado === 'pendiente').length;
   const notifs = [
@@ -41,7 +41,7 @@ export default function ProfessorDashboard() {
           <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#B8B4AA] mt-1">Panel del Profesor</p>
         </div>
         <nav className="flex-1 px-3 py-4 overflow-y-auto">
-          {SECTIONS.map(s => (
+          {SECTIONS.map((s: any) => (
             <button
               key={s.id}
               onClick={() => { setSection(s.id); setSidebarOpen(false); }}
@@ -142,7 +142,7 @@ function OverviewSection() {
   ];
 
   // Progress per module
-  const moduloProgreso = MODULOS_MOCK.slice(0, 5).map(m => {
+  const moduloProgreso = MODULOS_MOCK.slice(0, 5).map((m: any) => {
     const registros = PROGRESO_MOCK.filter(p => p.modulo_id === m.id);
     const promedio = registros.length ? Math.round(registros.reduce((s, r) => s + r.porcentaje, 0) / registros.length) : 0;
     return { ...m, promedio };
@@ -188,7 +188,7 @@ function OverviewSection() {
         <div className="bg-[#141419] border border-[rgba(244,242,236,0.08)] p-6">
           <p className="font-mono text-xs uppercase tracking-[0.14em] text-[#B8B4AA] mb-5">Últimas solicitudes</p>
           <div className="space-y-3">
-            {SOLICITUDES_MOCK.slice(0, 4).map(s => (
+            {SOLICITUDES_MOCK.slice(0, 4).map((s: any) => (
               <div key={s.id} className="flex items-center gap-4">
                 <div className="w-8 h-8 rounded-full bg-[rgba(199,163,109,0.1)] flex items-center justify-center text-xs font-serif text-[#C7A36D]">
                   {s.nombre.charAt(0)}
@@ -217,7 +217,7 @@ function OverviewSection() {
               </tr>
             </thead>
             <tbody>
-              {ESTUDIANTES_MOCK.map(e => {
+              {ESTUDIANTES_MOCK.map((e: any) => {
                 const progresoEst = PROGRESO_MOCK.filter(p => p.estudiante_id === e.id);
                 const completados = progresoEst.filter(p => p.completado).length;
                 return (
@@ -249,17 +249,17 @@ function OverviewSection() {
 function SolicitudesSection() {
   const [solicitudes, setSolicitudes] = useState(SOLICITUDES_MOCK);
   const [filter, setFilter] = useState('todas');
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState<null | any>(null);
 
-  const filtered = filter === 'todas' ? solicitudes : solicitudes.filter(s => s.estado === filter);
+  const filtered = filter === 'todas' ? solicitudes : solicitudes.filter((s: any) => s.estado === filter);
 
-  const updateEstado = (id, estado) => setSolicitudes(prev => prev.map(s => s.id === id ? { ...s, estado } : s));
+  const updateEstado = (id: string, estado: string) => setSolicitudes(prev => prev.map((s: any) => s.id === id ? { ...s, estado } : s));
 
   return (
     <div className="space-y-6">
       {/* Filters */}
       <div className="flex flex-wrap gap-2">
-        {['todas', 'pendiente', 'aprobado', 'rechazado'].map(f => (
+        {['todas', 'pendiente', 'aprobado', 'rechazado'].map((f: string) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
@@ -286,7 +286,7 @@ function SolicitudesSection() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map(s => (
+              {filtered.map((s: any) => (
                 <tr key={s.id} className="border-b border-[rgba(244,242,236,0.04)] hover:bg-[rgba(244,242,236,0.02)] transition-colors">
                   <td className="px-5 py-4 text-[#F4F2EC]">{s.nombre}</td>
                   <td className="px-5 py-4 text-[#B8B4AA]">{s.email}</td>
@@ -364,7 +364,7 @@ function SolicitudesSection() {
 // ── ESTUDIANTES ──────────────────────────────────────────────────
 function EstudiantesSection() {
   const [query, setQuery] = useState('');
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState<null | any>(null);
   const [estudiantes, setEstudiantes] = useState(ESTUDIANTES_MOCK);
 
   const filtered = estudiantes.filter(e =>
@@ -372,8 +372,8 @@ function EstudiantesSection() {
     e.email.toLowerCase().includes(query.toLowerCase())
   );
 
-  const toggleActivo = (id) => setEstudiantes(prev => prev.map(e => e.id === id ? { ...e, activo: !e.activo } : e));
-  const updatePago = (id, estado) => setEstudiantes(prev => prev.map(e => e.id === id ? { ...e, estado_pago: estado } : e));
+  const toggleActivo = (id) => setEstudiantes(prev => prev.map((e: any) => e.id === id ? { ...e, activo: !e.activo } : e));
+  const updatePago = (id, estado) => setEstudiantes(prev => prev.map((e: any) => e.id === id ? { ...e, estado_pago: estado } : e));
 
   return (
     <div className="space-y-6">
@@ -399,7 +399,7 @@ function EstudiantesSection() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map(e => {
+              {filtered.map((e: any) => {
                 const progresoEst = PROGRESO_MOCK.filter(p => p.estudiante_id === e.id);
                 const completados = progresoEst.filter(p => p.completado).length;
                 const pct = Math.round((completados / MODULOS_MOCK.length) * 100);
@@ -523,7 +523,7 @@ function ModulosSection() {
         modulo={modulo}
         onSave={(data) => {
           if (editId) {
-            setModulos(prev => prev.map(m => m.id === editId ? { ...m, ...data } : m));
+            setModulos(prev => prev.map((m: any) => m.id === editId ? { ...m, ...data } : m));
           } else {
             setModulos(prev => [...prev, { ...data, id: `mod-0${prev.length + 1}` }]);
           }
@@ -573,7 +573,7 @@ function ModulosSection() {
   );
 }
 
-function ModuloEditor({ modulo, onSave, onCancel }) {
+function ModuloEditor({ modulo, onSave, onCancel }: any) {
   const [form, setForm] = useState(modulo || {
     titulo: '', descripcion: '', duracion: '2 semanas', estado: 'borrador',
     objetivos: [''], ejercicio_titulo: '', ejercicio_descripcion: '',
@@ -643,7 +643,7 @@ function ModuloEditor({ modulo, onSave, onCancel }) {
             <button onClick={addObjetivo} className="text-[#C7A36D] hover:text-[#d4b07a] transition-colors"><Plus className="w-4 h-4" /></button>
           </div>
           <div className="space-y-2">
-            {(form.objetivos || []).map((obj, i) => (
+            {(form.objetivos || []).map((obj: any, i: number) => (
               <div key={i} className="flex gap-2">
                 <input type="text" value={obj} onChange={e => updateObjetivo(i, e.target.value)} placeholder={`Objetivo ${i + 1}`}
                   className="flex-1 bg-[#0B0B0D] border border-[rgba(244,242,236,0.1)] text-[#F4F2EC] px-4 py-2.5 text-sm focus:outline-none focus:border-[#C7A36D] transition-colors" />
@@ -761,7 +761,7 @@ function PagosSection() {
               </tr>
             </thead>
             <tbody>
-              {PAGOS_MOCK.map(p => (
+              {PAGOS_MOCK.map((p: any) => (
                 <tr key={p.id} className="border-b border-[rgba(244,242,236,0.04)] hover:bg-[rgba(244,242,236,0.02)] transition-colors">
                   <td className="px-5 py-4">
                     <p className="text-[#F4F2EC]">{p.estudiante_nombre}</p>
@@ -825,11 +825,11 @@ function ConfiguracionSection() {
             { key: "link_pago", label: "Link de pago (Stripe/MP)", type: "url" },
           ]
         },
-      ].map(({ title, fields }) => (
+      ].map(({ title, fields }: any) => (
         <div key={title} className="bg-[#141419] border border-[rgba(244,242,236,0.08)] p-6">
           <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#B8B4AA] mb-5">{title}</p>
           <div className="space-y-4">
-            {fields.map(({ key, label, type }) => (
+            {fields.map(({ key, label, type }: any) => (
               <div key={key}>
                 <label className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[#B8B4AA] mb-2">{label}</label>
                 {type === 'textarea' ? (
@@ -856,7 +856,7 @@ function ConfiguracionSection() {
 }
 
 // ── SHARED ───────────────────────────────────────────────────────
-function StatusBadge({ estado }) {
+function StatusBadge({ estado }: any) {
   const map = {
     pendiente: 'bg-yellow-400/10 text-yellow-400 border-yellow-400/20',
     aprobado: 'bg-green-400/10 text-green-400 border-green-400/20',

@@ -30,5 +30,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "api/src/utils/createAdmin.ts"]
+  "include": ["src"]
 }

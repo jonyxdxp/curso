@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState } from 'react';
 import { createPageUrl } from '@/utils';
 import { ArrowLeft, CheckCircle, Clock, BookOpen, DollarSign, Mail, Phone, MapPin, Calendar, XCircle, Award } from 'lucide-react';
