@@ -12,6 +12,7 @@ import {
   reorderModules,
   getModuleStats
 } from '../controllers/moduleController';
+import { getContenidoByModuloId, createContenido, updateContenido, deleteContenido, updateContenidoOrder } from '../controllers/contenidoModuloController';
 import { authenticate, requireProfessor } from '../middleware/auth';
 
 const router = Router();
@@ -41,5 +42,12 @@ router.delete('/:id', authenticate, requireProfessor, [param('id').notEmpty()], 
 router.post('/:id/publish', authenticate, requireProfessor, [param('id').notEmpty()], publishModule);
 router.post('/:id/duplicate', authenticate, requireProfessor, [param('id').notEmpty()], duplicateModule);
 router.post('/reorder', authenticate, requireProfessor, reorderModules);
+
+// Rutas para la gestión de contenido de módulos
+router.get('/:moduloId/contenido', authenticate, getContenidoByModuloId);
+router.post('/:moduloId/contenido', authenticate, requireProfessor, createContenido);
+router.put('/:moduloId/contenido/:contenidoId', authenticate, requireProfessor, updateContenido);
+router.delete('/:moduloId/contenido/:contenidoId', authenticate, requireProfessor, deleteContenido);
+router.put('/:moduloId/contenido/order', authenticate, requireProfessor, updateContenidoOrder);
 
 export default router;

@@ -121,6 +121,26 @@ export const emailTemplates = {
     `
   }),
 
+  registrationLink: (nombre: string, registrationUrl: string) => ({
+    subject: '¡Tu acceso al curso está listo! Crea tu contraseña',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h1 style="color: #C7A36D;">¡Hola ${nombre}!</h1>
+        <p>¡Felicidades! Tu pago para el curso <strong>Poética de la Mirada</strong> ha sido confirmado.</p>
+        <p>Para completar tu inscripción y acceder a la plataforma, por favor, crea tu cuenta haciendo clic en el siguiente enlace:</p>
+        <a href="${registrationUrl}" style="display: inline-block; background: #C7A36D; color: #0B0B0D; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 16px 0;">
+          Crear mi Cuenta
+        </a>
+        <p>Este enlace es personal y te permitirá establecer tu contraseña.</p>
+        <p>¡Estamos emocionados de tenerte a bordo!</p>
+        <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+        <p style="color: #666; font-size: 12px;">
+          Poética de la Mirada - Curso de Arte Online
+        </p>
+      </div>
+    `
+  }),
+
   passwordReset: (nombre: string, resetUrl: string) => ({
     subject: 'Restablecer contraseña',
     html: `
@@ -143,6 +163,11 @@ export const emailTemplates = {
 
 export const sendWelcomeEmail = async (nombre: string, email: string, loginUrl: string) => {
   const template = emailTemplates.welcome(nombre, loginUrl);
+  return sendEmail(email, template.subject, template.html);
+};
+
+export const sendRegistrationLinkEmail = async (nombre: string, email: string, registrationUrl: string) => {
+  const template = emailTemplates.registrationLink(nombre, registrationUrl);
   return sendEmail(email, template.subject, template.html);
 };
 

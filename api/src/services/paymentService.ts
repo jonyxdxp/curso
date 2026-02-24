@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import { PrismaClient } from '@prisma/client';
 import { logger } from '../utils/logger';
+import { sendRegistrationLinkEmail } from './emailService';
 
 const prisma = new PrismaClient();
 
@@ -175,6 +176,10 @@ const handlePaymentSuccess = async (session: Stripe.Checkout.Session) => {
       // Generar contraseña temporal y enviar email de bienvenida
       // Esto se maneja en el controlador de auth
       logger.info(`Pago completado para estudiante: ${estudianteId}`);
+
+      // Enviar email con enlace de registro
+      const registrationUrl = `${process.env.FRONTEND_URL}/register?estudianteId=${estudiante.id}&email=${estudiante.user.email}`;
+      await sendRegistrationLinkEmail(estudiante.user.nombre, estudiante.user.email, registrationUrl);
     }
 
     logger.info(`Pago exitoso procesado: ${session.id}`);

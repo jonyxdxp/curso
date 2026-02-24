@@ -12,17 +12,17 @@ import type { SolicitudAcceso } from '@/types';
 
 const ApplicationsManager: React.FC = () => {
   const [search, setSearch] = useState('');
-  const [estado, setEstado] = useState<string>('');
+ const [estado, setEstado] = useState<string>('todos');
   const [selectedApplication, setSelectedApplication] = useState<SolicitudAcceso | null>(null);
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
 
-  const { applications, isLoading, pagination, refetch, approveApplication, rejectApplication } = useApplications({
-    search: search || undefined,
-    estado: estado || undefined,
-    page: 1,
-    limit: 20
-  });
+ const { applications, isLoading, pagination, refetch, approveApplication, rejectApplication } = useApplications({
+  search: search || undefined,
+  estado: estado === 'todos' ? undefined : estado,  // Cambiado
+  page: 1,
+  limit: 20
+});
 
   const handleApprove = async (id: string) => {
     try {
@@ -80,11 +80,11 @@ const ApplicationsManager: React.FC = () => {
                   <SelectValue placeholder="Estado" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todos</SelectItem>
-                  <SelectItem value="pendiente">Pendiente</SelectItem>
-                  <SelectItem value="aprobado">Aprobado</SelectItem>
-                  <SelectItem value="rechazado">Rechazado</SelectItem>
-                </SelectContent>
+  <SelectItem value="todos">Todos</SelectItem>
+  <SelectItem value="pendiente">Pendiente</SelectItem>
+  <SelectItem value="aprobado">Aprobado</SelectItem>
+  <SelectItem value="rechazado">Rechazado</SelectItem>
+</SelectContent>
               </Select>
             </div>
           </div>
