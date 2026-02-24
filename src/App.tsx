@@ -7,9 +7,12 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import LandingPage from './pages/LandingPage';
 import ModulePage from './pages/ModulePage';
 import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import StudentDashboardPage from './pages/StudentDashboardPage';
-import ProfessorDashboardPage from './pages/ProfessorDashboardPage';
+
+import ProfessorDashboard from './pages/ProfessorDashboard';
+import Register from './pages/Register';
+import StudentDashboard from './pages/StudentDashboard';
+import EstudianteDetalle from './pages/EstudianteDetalle';
+
 import PaymentRequired from './components/PaymentRequired';
 
 // Export modules data for reuse (mantener compatibilidad con código existente)
@@ -299,14 +302,14 @@ function App() {
           {/* Public routes */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/register" element={<Register />} />
           
           {/* Protected student routes */}
           <Route 
             path="/dashboard" 
             element={
               <ProtectedRoute requireStudent>
-                <StudentDashboardPage />
+                <StudentDashboard />
               </ProtectedRoute>
             } 
           />
@@ -332,7 +335,7 @@ function App() {
             path="/profesor/*" 
             element={
               <ProtectedRoute requireProfessor>
-                <ProfessorDashboardPage />
+                <ProfessorDashboard />
               </ProtectedRoute>
             } 
           />
