@@ -90,35 +90,19 @@ model Modulo {
   descripcion     String?   @db.Text
   orden           Int       @default(0)
   moduloPrevioId  String?   @map("modulo_previo_id")
+  contenido       Json?     // Estructura flexible para el contenido
   estado          EstadoModulo @default(borrador)
   duracion        String?   @default("2 semanas")
   objetivos       String[]  @default([])
   ejercicio       Json?     // { titulo, descripcion, deadline }
+  recursos        Json?     // Array de recursos
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
 
   // Relaciones
   progreso ProgresoEstudiante[]
-  contenido ContenidoModulo[]
 
   @@map("modulos")
-}
-
-model ContenidoModulo {
-  id          String       @id @default(uuid())
-  moduloId    String       @map("modulo_id")
-  tipo        TipoContenido
-  titulo      String?
-  descripcion String?      @db.Text
-  url         String?      // Para videos, PDFs, Zoom links, imágenes
-  texto       String?      @db.Text // Para contenido de texto
-  orden       Int          @default(0)
-  createdAt   DateTime     @default(now()) @map("created_at")
-  updatedAt   DateTime     @updatedAt @map("updated_at")
-
-  modulo Modulo @relation(fields: [moduloId], references: [id], onDelete: Cascade)
-
-  @@map("contenido_modulos")
 }
 
 model ProgresoEstudiante {
@@ -215,14 +199,6 @@ enum EstadoSolicitud {
 enum EstadoModulo {
   borrador
   publicado
-}
-
-enum TipoContenido {
-  texto
-  video
-  pdf
-  zoom
-  imagen
 }
 
 enum EstadoPagoTransaccion {
