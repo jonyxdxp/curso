@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Filter, Eye, Mail } from 'lucide-react';
+import { Search, Filter, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,16 +8,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
 import { useStudents, useStudentDetail } from '@/hooks/useStudents';
-import { EstudianteDetail } from '@/types';
 
 const StudentsManager: React.FC = () => {
   const [search, setSearch] = useState('');
-  const [estado, setEstado] = useState<string>('');
+  // ✅ Use 'todos' instead of '' — shadcn Select crashes with empty string values
+  const [estado, setEstado] = useState<string>('todos');
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
 
   const { students, isLoading, pagination } = useStudents({
     search: search || undefined,
-    estado: estado || undefined,
+    // ✅ Convert 'todos' back to undefined for the API call
+    estado: estado === 'todos' ? undefined : estado,
     page: 1,
     limit: 20
   });
@@ -59,7 +60,8 @@ const StudentsManager: React.FC = () => {
                   <SelectValue placeholder="Estado" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todos</SelectItem>
+                  {/* ✅ All SelectItem values must be non-empty strings */}
+                  <SelectItem value="todos">Todos</SelectItem>
                   <SelectItem value="pagado">Pagado</SelectItem>
                   <SelectItem value="no_pagado">Pendiente</SelectItem>
                 </SelectContent>
@@ -137,12 +139,12 @@ const StudentsManager: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-sm text-[#B8B4AA]">Estado de pago</p>
-                  <p className="text-[#F4F2EC]">{getStatusBadge(selectedStudent.estadoPago)}</p>
+                  <div>{getStatusBadge(selectedStudent.estadoPago)}</div>
                 </div>
                 <div>
                   <p className="text-sm text-[#B8B4AA]">Fecha de inscripción</p>
                   <p className="text-[#F4F2EC]">
-                    {selectedStudent.fechaInscripcion 
+                    {selectedStudent.fechaInscripcion
                       ? new Date(selectedStudent.fechaInscripcion).toLocaleDateString('es-ES')
                       : 'N/A'}
                   </p>
