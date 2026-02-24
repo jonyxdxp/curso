@@ -424,7 +424,7 @@ function EstudiantesSection() {
                     </td>
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-1">
-                        <button onClick={() => window.location.href = createPageUrl(`EstudianteDetalle?id=${e.id}`)} className="p-1.5 text-[#B8B4AA] hover:text-[#C7A36D] transition-colors" title="Ver detalle">
+                        <button onClick={() => window.location.href = createPageUrl(`#/estudiantedetalle?id=${e.id}`)} className="p-1.5 text-[#B8B4AA] hover:text-[#C7A36D] transition-colors" title="Ver detalle">
                           <Eye className="w-4 h-4" />
                         </button>
                         <button onClick={() => toggleActivo(e.id)} className={`p-1.5 transition-colors ${e.activo ? 'text-[#B8B4AA] hover:text-yellow-400' : 'text-yellow-400 hover:text-[#B8B4AA]'}`} title={e.activo ? 'Desactivar' : 'Activar'}>

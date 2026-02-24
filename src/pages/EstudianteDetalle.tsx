@@ -43,7 +43,7 @@ export default function EstudianteDetalle() {
       <div className="min-h-screen bg-[#0B0B0D] flex items-center justify-center">
         <div className="text-center">
           <p className="text-[#B8B4AA] mb-4">Estudiante no encontrado.</p>
-          <button onClick={() => window.location.href = createPageUrl('ProfessorDashboard')}
+          <button onClick={() => window.location.href = createPageUrl('#/profesor')}
             className="font-mono text-xs uppercase tracking-[0.14em] text-[#C7A36D] hover:underline">
             ← Volver al dashboard
           </button>
