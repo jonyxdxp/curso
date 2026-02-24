@@ -27,36 +27,48 @@ app.set('trust proxy', 1);
 
 const PORT = process.env.PORT || 10000;
 
+// ✅ CORS must come BEFORE helmet and everything else
+const allowedOrigins = [
+  'https://curso-nine-psi.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000',
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS bloqueado para origen: ${origin}`), false);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200 // Some browsers (IE11) choke on 204
+}));
+
+// ✅ Handle OPTIONS preflight requests explicitly
+app.options('*', cors());
+
+// Helmet after CORS
+app.use(helmet());
+app.use(morgan('dev'));
+
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // límite por IP
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   message: 'Demasiadas solicitudes, por favor intente más tarde'
 });
-
-// Middlewares
-app.use(helmet());
-// DESPUÉS:
-app.use(cors({
-  origin: [
-    'https://curso-nine-psi.vercel.app',
-    'http://localhost:5173',
-    'http://localhost:3000',
-    'https://curso-vaip.onrender.com/api'
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-app.use(morgan('dev'));
 app.use(limiter);
 app.use(requestLogger);
 
-// DESPUÉS:
-// Webhook de Stripe necesita raw body (solo para la ruta específica)
+// Webhook de Stripe necesita raw body
 app.use('/api/webhooks/stripe', express.raw({ type: 'application/json' }));
 
-// Body parsing para otras rutas (incluyendo el webhook de Google Forms)
+// Body parsing para otras rutas
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -85,7 +97,7 @@ app.use((req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-  console.log(`📚 API Documentation: http://localhost:${PORT}/health`);
+  console.log(`📚 Health check: http://localhost:${PORT}/health`);
 });
 
 export default app;
