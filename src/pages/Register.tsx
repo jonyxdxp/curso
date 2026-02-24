@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from '../utils';
 
 export default function Register() {
   const urlParams = new URLSearchParams(window.location.search);

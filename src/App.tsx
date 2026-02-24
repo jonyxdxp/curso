@@ -8,6 +8,7 @@ import LandingPage from './pages/LandingPage';
 import ModulePage from './pages/ModulePage';
 import LoginPage from './pages/LoginPage';
 
+import { ThemeProvider } from './components/shared/ThemeContext';
 import ProfessorDashboard from './pages/ProfessorDashboard';
 import Register from './pages/Register';
 import StudentDashboard from './pages/StudentDashboard';
@@ -296,6 +297,7 @@ export const modulesData = [
 
 function App() {
   return (
+    <ThemeProvider>
     <AuthProvider>
       <HashRouter>
         <Routes>
@@ -343,6 +345,7 @@ function App() {
       </HashRouter>
       <Toaster />
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 

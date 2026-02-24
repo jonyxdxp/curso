@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from '../utils';
 import ThemeToggle from '../components/shared/ThemeToggle';
 import {
   LayoutDashboard, Users, BookOpen, CreditCard, UserCheck,

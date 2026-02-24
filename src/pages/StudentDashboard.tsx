@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from '../utils';
 import { BookOpen, CheckCircle, Clock, Play, Award, LogOut, User, ChevronRight, Lock, Settings, X, Bell, Star } from 'lucide-react';
 import ThemeToggle from '../components/shared/ThemeToggle';
 import { MODULOS_MOCK, PROGRESO_MOCK, CONFIG_MOCK } from '../components/shared/mockData';
