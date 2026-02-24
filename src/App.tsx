@@ -343,14 +343,10 @@ function App() {
               </ProtectedRoute>
             } 
           />
-          <Route 
-  path="/estudiante-detalle" 
-  element={
-    <ProtectedRoute requireProfessor>
-      <EstudianteDetalle />
-    </ProtectedRoute>
-  } 
-/>
+        
+
+<Route path="/estudiantedetalle" element={<EstudianteDetalle />} />
+
 
         </Routes>
       </HashRouter>
