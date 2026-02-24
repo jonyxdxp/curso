@@ -100,6 +100,18 @@ const Navigation = () => {
               </div>
             )}
           </li>
+
+          {/* Botón Acceder */}
+          <li>
+            <a
+              href="https://curso-nine-psi.vercel.app/#/login"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-mono text-xs uppercase tracking-[0.14em] px-4 py-2 border border-[#C7A36D] text-[#C7A36D] hover:bg-[#C7A36D] hover:text-[#0B0B0D] transition-all duration-300 rounded-sm"
+            >
+              Acceder
+            </a>
+          </li>
         </ul>
       </nav>
     </>
