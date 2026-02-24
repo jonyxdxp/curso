@@ -14,6 +14,8 @@ import Register from './pages/Register';
 import StudentDashboard from './pages/StudentDashboard';
 import EstudianteDetalle from './pages/EstudianteDetalle';
 
+
+
 import PaymentRequired from './components/PaymentRequired';
 
 // Export modules data for reuse (mantener compatibilidad con código existente)
@@ -297,7 +299,7 @@ export const modulesData = [
 
 function App() {
   return (
-    <ThemeProvider>
+  <ThemeProvider>
     <AuthProvider>
       <HashRouter>
         <Routes>
@@ -341,6 +343,15 @@ function App() {
               </ProtectedRoute>
             } 
           />
+          <Route 
+  path="/estudiante-detalle" 
+  element={
+    <ProtectedRoute requireProfessor>
+      <EstudianteDetalle />
+    </ProtectedRoute>
+  } 
+/>
+
         </Routes>
       </HashRouter>
       <Toaster />
