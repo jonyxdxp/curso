@@ -143,7 +143,7 @@ export const CONFIG_MOCK = {
   descripcion_curso: "Un curso para aprender a ver antes de pintar. Ocho módulos, encuentros virtuales y tiempo de decantación.",
   precio_curso: 350,
   moneda: "USD",
-  nombre_profesor: "Ernesto Hengel",
+  nombre_profesor: "Ernesto Engel",
   bio_profesor: "Artista visual y docente. Su trabajo explora el paisaje, la memoria y la pintura como acto de atención.",
   foto_profesor_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
   email_contacto: "hola@poeticadelamirada.com",

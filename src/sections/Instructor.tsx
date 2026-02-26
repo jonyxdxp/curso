@@ -146,7 +146,7 @@ const Instructor = () => {
                 Autor del curso
               </span>
               <h3 className="mt-2 font-serif text-2xl md:text-3xl font-medium text-[#F4F2EC]">
-                Ernesto Hengel
+                Ernesto Engel
               </h3>
               <p className="mt-3 text-[#B8B4AA] leading-relaxed max-w-md">
                 Artista visual y docente. Su trabajo explora el paisaje, la memoria y la pintura como acto de atención.
