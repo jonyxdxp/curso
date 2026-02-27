@@ -299,60 +299,67 @@ export const modulesData = [
 
 function App() {
   return (
-  <ThemeProvider>
     <AuthProvider>
       <HashRouter>
         <Routes>
-          {/* Public routes */}
+          {/* Public routes (Always Dark) */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<Register />} />
           
-          {/* Protected student routes */}
+          {/* Protected routes (With Theme Support) */}
           <Route 
             path="/dashboard" 
             element={
-              <ProtectedRoute requireStudent>
-                <StudentDashboard />
-              </ProtectedRoute>
+              <ThemeProvider>
+                <ProtectedRoute requireStudent>
+                  <StudentDashboard />
+                </ProtectedRoute>
+              </ThemeProvider>
             } 
           />
           <Route 
             path="/modulo/:moduleId" 
             element={
-              <ProtectedRoute requireStudent requirePayment>
-                <ModulePage />
-              </ProtectedRoute>
+              <ThemeProvider>
+                <ProtectedRoute requireStudent requirePayment>
+                  <ModulePage />
+                </ProtectedRoute>
+              </ThemeProvider>
             } 
           />
           <Route 
             path="/pago-requerido" 
             element={
-              <ProtectedRoute requireStudent>
-                <PaymentRequired />
-              </ProtectedRoute>
+              <ThemeProvider>
+                <ProtectedRoute requireStudent>
+                  <PaymentRequired />
+                </ProtectedRoute>
+              </ThemeProvider>
             } 
           />
-          
-          {/* Protected professor routes */}
           <Route 
             path="/profesor/*" 
             element={
-              <ProtectedRoute requireProfessor>
-                <ProfessorDashboard />
-              </ProtectedRoute>
+              <ThemeProvider>
+                <ProtectedRoute requireProfessor>
+                  <ProfessorDashboard />
+                </ProtectedRoute>
+              </ThemeProvider>
             } 
           />
-        
-
-<Route path="/estudiantedetalle" element={<EstudianteDetalle />} />
-
-
+          <Route 
+            path="/estudiantedetalle" 
+            element={
+              <ThemeProvider>
+                <EstudianteDetalle />
+              </ThemeProvider>
+            } 
+          />
         </Routes>
       </HashRouter>
       <Toaster />
     </AuthProvider>
-    </ThemeProvider>
   );
 }
 
