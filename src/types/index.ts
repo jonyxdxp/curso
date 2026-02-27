@@ -48,9 +48,7 @@ export interface Modulo {
   orden: number;
   duracion?: string;
   objetivos: string[];
-  estado: 'borrador' | 'publicado' | 'programado';
-  fecha_programada?: string;
-  hora_programada?: string;
+  estado: 'borrador' | 'publicado';
   contenido: ContenidoModulo[];
   ejercicio?: Ejercicio;
   recursos: Recurso[];
