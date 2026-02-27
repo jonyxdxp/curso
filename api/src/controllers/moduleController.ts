@@ -11,9 +11,15 @@ export const getModules = asyncHandler(async (req: Request, res: Response) => {
 
   const where: any = {};
   
-  // Si es estudiante, solo ver módulos publicados
+  // Si es estudiante, solo ver módulos publicados o programados cuya fecha ya pasó
   if (req.user?.rol === 'estudiante') {
-    where.estado = 'publicado';
+    where.OR = [
+      { estado: 'publicado' },
+      { 
+        estado: 'programado',
+        fechaPublicacion: { lte: new Date() }
+      }
+    ];
   } else if (estado) {
     where.estado = estado;
   }
@@ -39,10 +45,17 @@ export const getModuleById = asyncHandler(async (req: Request, res: Response) =>
     return;
   }
 
-  // Si es estudiante, verificar que el módulo esté publicado
-  if (req.user?.rol === 'estudiante' && modulo.estado !== 'publicado') {
-    res.status(403).json({ error: 'No tiene acceso a este módulo' });
-    return;
+  // Si es estudiante, verificar que el módulo esté publicado o programado y ya sea la fecha
+  if (req.user?.rol === 'estudiante') {
+    const isPublished = modulo.estado === 'publicado';
+    const isScheduledAndReady = modulo.estado === 'programado' && 
+                               modulo.fechaPublicacion && 
+                               new Date(modulo.fechaPublicacion) <= new Date();
+    
+    if (!isPublished && !isScheduledAndReady) {
+      res.status(403).json({ error: 'No tiene acceso a este módulo' });
+      return;
+    }
   }
 
   res.json(modulo);
@@ -58,12 +71,18 @@ export const getModuleByOrder = asyncHandler(async (req: Request, res: Response)
     return;
   }
 
-  const modulo = await prisma.modulo.findFirst({
-    where: { 
-      orden: orderNum,
-      estado: req.user?.rol === 'estudiante' ? 'publicado' : undefined
-    }
-  });
+  const where: any = { orden: orderNum };
+  if (req.user?.rol === 'estudiante') {
+    where.OR = [
+      { estado: 'publicado' },
+      { 
+        estado: 'programado',
+        fechaPublicacion: { lte: new Date() }
+      }
+    ];
+  }
+
+  const modulo = await prisma.modulo.findFirst({ where });
 
   if (!modulo) {
     res.status(404).json({ error: 'Módulo no encontrado' });
@@ -85,7 +104,8 @@ export const createModule = asyncHandler(async (req: Request, res: Response) => 
     objetivos,
     ejercicio,
     recursos,
-    estado = 'borrador'
+    estado = 'borrador',
+    fechaPublicacion
   } = req.body;
 
   if (!titulo) {
@@ -113,7 +133,8 @@ export const createModule = asyncHandler(async (req: Request, res: Response) => 
       objetivos: objetivos || [],
       ejercicio: ejercicio || {},
       recursos: recursos || [],
-      estado
+      estado,
+      fechaPublicacion: fechaPublicacion ? new Date(fechaPublicacion) : null
     }
   });
 
@@ -138,7 +159,8 @@ export const updateModule = asyncHandler(async (req: Request, res: Response) => 
     objetivos,
     ejercicio,
     recursos,
-    estado
+    estado,
+    fechaPublicacion
   } = req.body;
 
   const existingModule = await prisma.modulo.findUnique({
@@ -162,7 +184,8 @@ export const updateModule = asyncHandler(async (req: Request, res: Response) => 
       objetivos,
       ejercicio,
       recursos,
-      estado
+      estado,
+      fechaPublicacion: fechaPublicacion ? new Date(fechaPublicacion) : undefined
     }
   });
 
