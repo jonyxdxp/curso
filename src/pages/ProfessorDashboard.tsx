@@ -574,6 +574,10 @@ function ModulosSection() {
 }
 
 function ModuloEditor({ modulo, onSave, onCancel }: any) {
+
+  const [scheduleMode, setScheduleMode] = useState(form.estado === 'programado');
+const minDateTime = new Date().toISOString().slice(0, 16);
+
   const [form, setForm] = useState(modulo || {
     titulo: '', descripcion: '', duracion: '2 semanas', estado: 'borrador',
     objetivos: [''], ejercicio_titulo: '', ejercicio_descripcion: '',
@@ -625,14 +629,81 @@ function ModuloEditor({ modulo, onSave, onCancel }: any) {
               <input type="text" value={form.duracion} onChange={e => setForm({...form, duracion: e.target.value})}
                 className="w-full bg-[#0B0B0D] border border-[rgba(244,242,236,0.1)] text-[#F4F2EC] px-4 py-3 text-sm focus:outline-none focus:border-[#C7A36D] transition-colors" />
             </div>
-            <div>
-              <label className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[#B8B4AA] mb-2">Estado</label>
-              <select value={form.estado} onChange={e => setForm({...form, estado: e.target.value})}
-                className="w-full bg-[#0B0B0D] border border-[rgba(244,242,236,0.1)] text-[#F4F2EC] px-4 py-3 text-sm focus:outline-none focus:border-[#C7A36D] transition-colors">
-                <option value="borrador">Borrador</option>
-                <option value="publicado">Publicado</option>
-              </select>
-            </div>
+          // Y reemplazá el <div> del Estado con:
+<div className="col-span-2 border border-[rgba(244,242,236,0.08)] rounded p-4 space-y-4 bg-[rgba(244,242,236,0.02)]">
+  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#B8B4AA]">Publicación</p>
+
+  {/* Publicar inmediatamente */}
+  <div className="flex items-center justify-between">
+    <div>
+      <p className="text-sm text-[#F4F2EC]">Publicar inmediatamente</p>
+      <p className="text-xs text-[#B8B4AA] mt-0.5">El módulo quedará visible al guardar</p>
+    </div>
+    <input
+      type="checkbox"
+      checked={!scheduleMode && form.estado === 'publicado'}
+      onChange={(e) => {
+        setScheduleMode(false);
+        setForm({ ...form, estado: e.target.checked ? 'publicado' : 'borrador', scheduledPublishAt: undefined });
+      }}
+      className="w-4 h-4 accent-[#C7A36D]"
+    />
+  </div>
+
+  {/* Programar publicación */}
+  <div className="border-t border-[rgba(244,242,236,0.06)] pt-4 space-y-3">
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-sm text-[#F4F2EC] flex items-center gap-2">
+          <Clock className="w-4 h-4 text-blue-400" />
+          Programar publicación
+        </p>
+        <p className="text-xs text-[#B8B4AA] mt-0.5">Elige fecha y hora para publicar automáticamente</p>
+      </div>
+      <input
+        type="checkbox"
+        checked={scheduleMode}
+        onChange={(e) => {
+          setScheduleMode(e.target.checked);
+          setForm({
+            ...form,
+            estado: e.target.checked ? 'programado' : 'borrador',
+            scheduledPublishAt: e.target.checked ? form.scheduledPublishAt : undefined,
+          });
+        }}
+        className="w-4 h-4 accent-[#C7A36D]"
+      />
+    </div>
+
+    {scheduleMode && (
+      <div>
+        <label className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[#B8B4AA] mb-1">
+          Fecha y hora de publicación
+        </label>
+        <input
+          type="datetime-local"
+          min={minDateTime}
+          value={form.scheduledPublishAt ? new Date(form.scheduledPublishAt).toISOString().slice(0, 16) : ''}
+          onChange={(e) => setForm({
+            ...form,
+            scheduledPublishAt: e.target.value ? new Date(e.target.value).toISOString() : undefined,
+          })}
+          className="w-full bg-[#0B0B0D] border border-[rgba(244,242,236,0.1)] text-[#F4F2EC] px-4 py-3 text-sm focus:outline-none focus:border-[#C7A36D] transition-colors"
+        />
+        {form.scheduledPublishAt && (
+          <p className="text-xs text-blue-400 mt-2 flex items-center gap-1">
+            <Calendar className="w-3 h-3" />
+            Se publicará el{' '}
+            {new Date(form.scheduledPublishAt).toLocaleString('es-ES', {
+              day: 'numeric', month: 'long', year: 'numeric',
+              hour: '2-digit', minute: '2-digit',
+            })}
+          </p>
+        )}
+      </div>
+    )}
+  </div>
+</div>
           </div>
         </div>
 
