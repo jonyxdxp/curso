@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Edit2, Trash2, Copy, Eye, EyeOff, GripVertical, Calendar } from 'lucide-react';
+import { Plus, Edit2, Trash2, Copy, Eye, EyeOff, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -115,20 +115,12 @@ const ModulesManager: React.FC = () => {
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <h3 className="font-medium text-[#F4F2EC]">{modulo.titulo}</h3>
-                      <Badge className={
-                        modulo.estado === 'publicado' ? 'bg-green-500/20 text-green-500' :
-                        modulo.estado === 'programado' ? 'bg-blue-500/20 text-blue-500' :
-                        'bg-yellow-500/20 text-yellow-500'
+                      <Badge className={modulo.estado === 'publicado' 
+                        ? 'bg-green-500/20 text-green-500' 
+                        : 'bg-yellow-500/20 text-yellow-500'
                       }>
-                        {modulo.estado === 'publicado' ? 'Publicado' : 
-                         modulo.estado === 'programado' ? 'Programado' : 'Borrador'}
+                        {modulo.estado === 'publicado' ? 'Publicado' : 'Borrador'}
                       </Badge>
-                      {modulo.estado === 'programado' && modulo.fechaPublicacion && (
-                        <span className="text-xs text-[#B8B4AA] flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          {new Date(modulo.fechaPublicacion).toLocaleDateString()}
-                        </span>
-                      )}
                     </div>
                     <p className="text-sm text-[#B8B4AA] line-clamp-1">{modulo.descripcion}</p>
                   </div>
@@ -209,52 +201,15 @@ const ModulesManager: React.FC = () => {
                 className="bg-[rgba(244,242,236,0.03)] border-[rgba(244,242,236,0.08)] text-[#F4F2EC]"
               />
             </div>
-            <div className="space-y-3 pt-2 border-t border-[rgba(244,242,236,0.08)]">
-              <Label className="text-[#F4F2EC] font-medium">Estado de publicación</Label>
-              <div className="grid grid-cols-3 gap-4">
-                <Button
-                  type="button"
-                  variant={editingModule?.estado === 'borrador' ? 'default' : 'outline'}
-                  onClick={() => setEditingModule({ ...editingModule, estado: 'borrador' })}
-                  className={editingModule?.estado === 'borrador' ? 'bg-yellow-500/20 text-yellow-500 border-yellow-500/50 hover:bg-yellow-500/30' : 'border-[rgba(244,242,236,0.1)]'}
-                >
-                  Borrador
-                </Button>
-                <Button
-                  type="button"
-                  variant={editingModule?.estado === 'publicado' ? 'default' : 'outline'}
-                  onClick={() => setEditingModule({ ...editingModule, estado: 'publicado' })}
-                  className={editingModule?.estado === 'publicado' ? 'bg-green-500/20 text-green-500 border-green-500/50 hover:bg-green-500/30' : 'border-[rgba(244,242,236,0.1)]'}
-                >
-                  Publicado
-                </Button>
-                <Button
-                  type="button"
-                  variant={editingModule?.estado === 'programado' ? 'default' : 'outline'}
-                  onClick={() => setEditingModule({ ...editingModule, estado: 'programado' })}
-                  className={editingModule?.estado === 'programado' ? 'bg-blue-500/20 text-blue-500 border-blue-500/50 hover:bg-blue-500/30' : 'border-[rgba(244,242,236,0.1)]'}
-                >
-                  Programado
-                </Button>
-              </div>
+            <div className="flex items-center gap-2">
+              <Switch
+                checked={editingModule?.estado === 'publicado'}
+                onCheckedChange={(checked) => 
+                  setEditingModule({ ...editingModule, estado: checked ? 'publicado' : 'borrador' })
+                }
+              />
+              <Label className="text-[#F4F2EC]">Publicado</Label>
             </div>
-
-            {editingModule?.estado === 'programado' && (
-              <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
-                <Label className="text-[#F4F2EC]">Fecha de publicación</Label>
-                <div className="relative">
-                  <Input
-                    type="datetime-local"
-                    value={editingModule?.fechaPublicacion ? new Date(editingModule.fechaPublicacion).toISOString().slice(0, 16) : ''}
-                    onChange={(e) => setEditingModule({ ...editingModule, fechaPublicacion: e.target.value })}
-                    className="bg-[rgba(244,242,236,0.03)] border-[rgba(244,242,236,0.08)] text-[#F4F2EC]"
-                  />
-                </div>
-                <p className="text-xs text-[#B8B4AA]">
-                  El módulo se publicará automáticamente para los estudiantes en la fecha y hora seleccionada.
-                </p>
-              </div>
-            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="border-[rgba(244,242,236,0.15)]">

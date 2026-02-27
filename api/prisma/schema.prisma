@@ -96,7 +96,6 @@ model Modulo {
   objetivos       String[]  @default([])
   ejercicio       Json?     // { titulo, descripcion, deadline }
   recursos        Json?     // Array de recursos
-  fechaPublicacion DateTime? @map("fecha_publicacion") // Fecha programada para publicación automática
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
 
@@ -200,7 +199,6 @@ enum EstadoSolicitud {
 enum EstadoModulo {
   borrador
   publicado
-  programado
 }
 
 enum EstadoPagoTransaccion {
