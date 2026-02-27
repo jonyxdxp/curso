@@ -40,6 +40,8 @@ export interface RegisterData {
   estudianteId: string;
 }
 
+
+
 // Tipos de módulos
 export interface Modulo {
   id: string;
@@ -48,7 +50,8 @@ export interface Modulo {
   orden: number;
   duracion?: string;
   objetivos: string[];
-  estado: 'borrador' | 'publicado';
+  estado: 'borrador' | 'publicado' | 'programado';  // <-- agrega 'programado'
+  scheduledPublishAt?: string;                        // <-- campo nuevo
   contenido: ContenidoModulo[];
   ejercicio?: Ejercicio;
   recursos: Recurso[];

@@ -80,3 +80,12 @@ export const getModuleStats = async (): Promise<any[]> => {
     throw new Error(handleApiError(error));
   }
 };
+
+
+export const scheduleModule = async (id: string, scheduledPublishAt: string): Promise<void> => {
+  try {
+    await api.post(`/modules/${id}/schedule`, { scheduledPublishAt });
+  } catch (error) {
+    throw new Error(handleApiError(error));
+  }
+};
