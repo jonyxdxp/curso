@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { asyncHandler } from '../middleware/errorHandler';
 import { logger } from '../utils/logger';
 
@@ -9,19 +9,18 @@ const prisma = new PrismaClient();
 export const getModules = asyncHandler(async (req: Request, res: Response) => {
   const { estado = 'publicado' } = req.query;
 
-  const where: any = {};
-  
-  // Si es estudiante, solo ver módulos publicados o programados cuya fecha ya pasó
+  const where: Prisma.ModuloWhereInput = {};
+
   if (req.user?.rol === 'estudiante') {
     where.OR = [
       { estado: 'publicado' },
-      { 
+      {
         estado: 'programado',
         fechaPublicacion: { lte: new Date() }
       }
     ];
   } else if (estado) {
-    where.estado = estado;
+    where.estado = estado as string;
   }
 
   const modulos = await prisma.modulo.findMany({
@@ -45,13 +44,13 @@ export const getModuleById = asyncHandler(async (req: Request, res: Response) =>
     return;
   }
 
-  // Si es estudiante, verificar que el módulo esté publicado o programado y ya sea la fecha
   if (req.user?.rol === 'estudiante') {
     const isPublished = modulo.estado === 'publicado';
-    const isScheduledAndReady = modulo.estado === 'programado' && 
-                               modulo.fechaPublicacion && 
-                               new Date(modulo.fechaPublicacion) <= new Date();
-    
+    const isScheduledAndReady =
+      modulo.estado === 'programado' &&
+      modulo.fechaPublicacion !== null &&
+      new Date(modulo.fechaPublicacion) <= new Date();
+
     if (!isPublished && !isScheduledAndReady) {
       res.status(403).json({ error: 'No tiene acceso a este módulo' });
       return;
@@ -64,23 +63,31 @@ export const getModuleById = asyncHandler(async (req: Request, res: Response) =>
 // Obtener módulo por número de orden (para el frontend)
 export const getModuleByOrder = asyncHandler(async (req: Request, res: Response) => {
   const { order } = req.params;
-  const orderNum = parseInt(order);
+  const orderNum = parseInt(order, 10);
 
   if (isNaN(orderNum)) {
     res.status(400).json({ error: 'Número de módulo inválido' });
     return;
   }
 
-  const where: any = { orden: orderNum };
-  if (req.user?.rol === 'estudiante') {
-    where.OR = [
-      { estado: 'publicado' },
-      { 
-        estado: 'programado',
-        fechaPublicacion: { lte: new Date() }
-      }
-    ];
-  }
+  // FIX: usar AND para combinar orden con la condición de acceso del estudiante
+  const where: Prisma.ModuloWhereInput =
+    req.user?.rol === 'estudiante'
+      ? {
+          AND: [
+            { orden: orderNum },
+            {
+              OR: [
+                { estado: 'publicado' },
+                {
+                  estado: 'programado',
+                  fechaPublicacion: { lte: new Date() }
+                }
+              ]
+            }
+          ]
+        }
+      : { orden: orderNum };
 
   const modulo = await prisma.modulo.findFirst({ where });
 
@@ -113,13 +120,12 @@ export const createModule = asyncHandler(async (req: Request, res: Response) => 
     return;
   }
 
-  // Si no se especifica orden, ponerlo al final
   let finalOrden = orden;
   if (finalOrden === undefined) {
     const lastModule = await prisma.modulo.findFirst({
       orderBy: { orden: 'desc' }
     });
-    finalOrden = (lastModule?.orden || 0) + 1;
+    finalOrden = (lastModule?.orden ?? 0) + 1;
   }
 
   const modulo = await prisma.modulo.create({
@@ -128,11 +134,11 @@ export const createModule = asyncHandler(async (req: Request, res: Response) => 
       descripcion,
       orden: finalOrden,
       moduloPrevioId,
-      contenido: contenido || [],
-      duracion: duracion || '2 semanas',
-      objetivos: objetivos || [],
-      ejercicio: ejercicio || {},
-      recursos: recursos || [],
+      contenido: contenido ?? [],
+      duracion: duracion ?? '2 semanas',
+      objetivos: objetivos ?? [],
+      ejercicio: ejercicio ?? {},
+      recursos: recursos ?? [],
       estado,
       fechaPublicacion: fechaPublicacion ? new Date(fechaPublicacion) : null
     }
@@ -163,31 +169,30 @@ export const updateModule = asyncHandler(async (req: Request, res: Response) => 
     fechaPublicacion
   } = req.body;
 
-  const existingModule = await prisma.modulo.findUnique({
-    where: { id }
-  });
+  const existingModule = await prisma.modulo.findUnique({ where: { id } });
 
   if (!existingModule) {
     res.status(404).json({ error: 'Módulo no encontrado' });
     return;
   }
 
-  const modulo = await prisma.modulo.update({
-    where: { id },
-    data: {
-      titulo,
-      descripcion,
-      orden,
-      moduloPrevioId,
-      contenido,
-      duracion,
-      objetivos,
-      ejercicio,
-      recursos,
-      estado,
-      fechaPublicacion: fechaPublicacion ? new Date(fechaPublicacion) : undefined
-    }
-  });
+  // FIX: construir solo los campos presentes para evitar sobreescribir con undefined
+  const data: Prisma.ModuloUpdateInput = {};
+  if (titulo !== undefined)          data.titulo          = titulo;
+  if (descripcion !== undefined)     data.descripcion     = descripcion;
+  if (orden !== undefined)           data.orden           = orden;
+  if (moduloPrevioId !== undefined)  data.moduloPrevioId  = moduloPrevioId;
+  if (contenido !== undefined)       data.contenido       = contenido;
+  if (duracion !== undefined)        data.duracion        = duracion;
+  if (objetivos !== undefined)       data.objetivos       = objetivos;
+  if (ejercicio !== undefined)       data.ejercicio       = ejercicio;
+  if (recursos !== undefined)        data.recursos        = recursos;
+  if (estado !== undefined)          data.estado          = estado;
+  if (fechaPublicacion !== undefined) {
+    data.fechaPublicacion = fechaPublicacion ? new Date(fechaPublicacion) : null;
+  }
+
+  const modulo = await prisma.modulo.update({ where: { id }, data });
 
   logger.info(`Módulo actualizado: ${id}`);
 
@@ -201,30 +206,25 @@ export const updateModule = asyncHandler(async (req: Request, res: Response) => 
 export const deleteModule = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const existingModule = await prisma.modulo.findUnique({
-    where: { id }
-  });
+  const existingModule = await prisma.modulo.findUnique({ where: { id } });
 
   if (!existingModule) {
     res.status(404).json({ error: 'Módulo no encontrado' });
     return;
   }
 
-  // Verificar si hay progreso asociado
   const progresoCount = await prisma.progresoEstudiante.count({
     where: { moduloId: id }
   });
 
   if (progresoCount > 0) {
-    res.status(400).json({ 
-      error: 'No se puede eliminar el módulo porque tiene progreso de estudiantes asociado' 
+    res.status(400).json({
+      error: 'No se puede eliminar el módulo porque tiene progreso de estudiantes asociado'
     });
     return;
   }
 
-  await prisma.modulo.delete({
-    where: { id }
-  });
+  await prisma.modulo.delete({ where: { id } });
 
   logger.info(`Módulo eliminado: ${id}`);
 
@@ -234,6 +234,14 @@ export const deleteModule = asyncHandler(async (req: Request, res: Response) => 
 // Publicar módulo (solo profesor)
 export const publishModule = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
+
+  // FIX: verificar existencia antes de actualizar
+  const existingModule = await prisma.modulo.findUnique({ where: { id } });
+
+  if (!existingModule) {
+    res.status(404).json({ error: 'Módulo no encontrado' });
+    return;
+  }
 
   const modulo = await prisma.modulo.update({
     where: { id },
@@ -252,20 +260,17 @@ export const publishModule = asyncHandler(async (req: Request, res: Response) =>
 export const duplicateModule = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const existingModule = await prisma.modulo.findUnique({
-    where: { id }
-  });
+  const existingModule = await prisma.modulo.findUnique({ where: { id } });
 
   if (!existingModule) {
     res.status(404).json({ error: 'Módulo no encontrado' });
     return;
   }
 
-  // Obtener el último orden
   const lastModule = await prisma.modulo.findFirst({
     orderBy: { orden: 'desc' }
   });
-  const newOrden = (lastModule?.orden || 0) + 1;
+  const newOrden = (lastModule?.orden ?? 0) + 1;
 
   const newModule = await prisma.modulo.create({
     data: {
@@ -298,8 +303,9 @@ export const reorderModules = asyncHandler(async (req: Request, res: Response) =
     return;
   }
 
+  // FIX: tipado explícito para evitar implicit any en el destructuring
   await prisma.$transaction(
-    orders.map(({ id, orden }) =>
+    orders.map(({ id, orden }: { id: string; orden: number }) =>
       prisma.modulo.update({
         where: { id },
         data: { orden }
@@ -315,23 +321,29 @@ export const reorderModules = asyncHandler(async (req: Request, res: Response) =
 // Estadísticas de módulos
 export const getModuleStats = asyncHandler(async (req: Request, res: Response) => {
   const modulos = await prisma.modulo.findMany({
-    include: {
-      progreso: true
-    }
+    include: { progreso: true }
   });
 
-  const stats = modulos.map(modulo => ({
-    id: modulo.id,
-    titulo: modulo.titulo,
-    orden: modulo.orden,
-    estado: modulo.estado,
-    totalEstudiantes: modulo.progreso.length,
-    completados: modulo.progreso.filter(p => p.completudPorcentaje === 100).length,
-    enProgreso: modulo.progreso.filter(p => p.completudPorcentaje > 0 && p.completudPorcentaje < 100).length,
-    promedioCompletud: modulo.progreso.length > 0
-      ? Math.round(modulo.progreso.reduce((acc, p) => acc + p.completudPorcentaje, 0) / modulo.progreso.length)
-      : 0
-  }));
+  const stats = modulos.map(modulo => {
+    const total = modulo.progreso.length;
+    return {
+      id: modulo.id,
+      titulo: modulo.titulo,
+      orden: modulo.orden,
+      estado: modulo.estado,
+      totalEstudiantes: total,
+      completados: modulo.progreso.filter(p => p.completudPorcentaje === 100).length,
+      enProgreso: modulo.progreso.filter(
+        p => p.completudPorcentaje > 0 && p.completudPorcentaje < 100
+      ).length,
+      promedioCompletud:
+        total > 0
+          ? Math.round(
+              modulo.progreso.reduce((acc, p) => acc + p.completudPorcentaje, 0) / total
+            )
+          : 0
+    };
+  });
 
   res.json(stats);
 });
