@@ -6,14 +6,14 @@ interface ThemeToggleProps {
 }
 
 export default function ThemeToggle({ className = '' }: ThemeToggleProps) {
-  const { theme, toggle } = useTheme();
+  const { theme, toggle, isDark } = useTheme();
   return (
     <button
       onClick={toggle}
-      title={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-      className={`p-2 rounded text-[#B8B4AA] hover:text-[#C7A36D] transition-colors ${className}`}
+      title={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+      className={`p-2 rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-all duration-200 ${className}`}
     >
-      {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+      {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
     </button>
   );
 }

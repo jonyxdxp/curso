@@ -105,6 +105,20 @@ export const MODULOS_MOCK = [
     ejercicio_deadline: "26 de Enero 2027",
     contenidos: [],
   },
+  {
+    id: "mod-09",
+    titulo: "Módulo Programado de Ejemplo",
+    descripcion: "Este es un módulo de ejemplo que demuestra la funcionalidad de programación de publicación.",
+    orden: 9, estado: "programado", duracion: "1 semana",
+    fecha_programada: "2026-12-25",
+    hora_programada: "10:00",
+    imagen_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80",
+    objetivos: ["Demostrar la funcionalidad de programación", "Mostrar el estado programado"],
+    ejercicio_titulo: "Ejercicio de prueba",
+    ejercicio_descripcion: "Este es un ejercicio de prueba para el módulo programado.",
+    ejercicio_deadline: "01 de Enero 2027",
+    contenidos: [],
+  },
 ];
 
 export const SOLICITUDES_MOCK = [
