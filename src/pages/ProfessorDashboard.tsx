@@ -5,7 +5,8 @@ import {
   LayoutDashboard, Users, BookOpen, CreditCard, UserCheck,
   Settings, LogOut, Bell, TrendingUp, DollarSign, Clock, CheckCircle,
   ChevronRight, Plus, Search, Filter, X, Eye, Check, XCircle,
-  Edit, Trash2, Video, FileText, Link, AlignLeft, Image, ExternalLink, BarChart2
+  Edit, Trash2, Video, FileText, Link, AlignLeft, Image, ExternalLink, BarChart2,
+  Calendar
 } from 'lucide-react';
 import {
   MODULOS_MOCK, SOLICITUDES_MOCK, ESTUDIANTES_MOCK, PAGOS_MOCK, PROGRESO_MOCK, CONFIG_MOCK
@@ -141,7 +142,6 @@ function OverviewSection() {
     { label: "Módulos publicados", value: MODULOS_MOCK.filter(m => m.estado === 'publicado').length, icon: BookOpen, color: "text-blue-400", bg: "bg-blue-400/10" },
   ];
 
-  // Progress per module
   const moduloProgreso = MODULOS_MOCK.slice(0, 5).map((m: any) => {
     const registros = PROGRESO_MOCK.filter(p => p.modulo_id === m.id);
     const promedio = registros.length ? Math.round(registros.reduce((s, r) => s + r.porcentaje, 0) / registros.length) : 0;
@@ -150,7 +150,6 @@ function OverviewSection() {
 
   return (
     <div className="space-y-8">
-      {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map(({ label, value, icon: Icon, color, bg }) => (
           <div key={label} className="bg-[#141419] border border-[rgba(244,242,236,0.08)] p-5">
@@ -166,7 +165,6 @@ function OverviewSection() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        {/* Progreso por módulo */}
         <div className="bg-[#141419] border border-[rgba(244,242,236,0.08)] p-6">
           <p className="font-mono text-xs uppercase tracking-[0.14em] text-[#B8B4AA] mb-5">Progreso por módulo</p>
           <div className="space-y-4">
@@ -184,7 +182,6 @@ function OverviewSection() {
           </div>
         </div>
 
-        {/* Últimas solicitudes */}
         <div className="bg-[#141419] border border-[rgba(244,242,236,0.08)] p-6">
           <p className="font-mono text-xs uppercase tracking-[0.14em] text-[#B8B4AA] mb-5">Últimas solicitudes</p>
           <div className="space-y-3">
@@ -204,7 +201,6 @@ function OverviewSection() {
         </div>
       </div>
 
-      {/* Estudiantes recientes */}
       <div className="bg-[#141419] border border-[rgba(244,242,236,0.08)] p-6">
         <p className="font-mono text-xs uppercase tracking-[0.14em] text-[#B8B4AA] mb-5">Estudiantes en curso</p>
         <div className="overflow-x-auto">
@@ -252,12 +248,10 @@ function SolicitudesSection() {
   const [selected, setSelected] = useState<null | any>(null);
 
   const filtered = filter === 'todas' ? solicitudes : solicitudes.filter((s: any) => s.estado === filter);
-
   const updateEstado = (id: string, estado: string) => setSolicitudes(prev => prev.map((s: any) => s.id === id ? { ...s, estado } : s));
 
   return (
     <div className="space-y-6">
-      {/* Filters */}
       <div className="flex flex-wrap gap-2">
         {['todas', 'pendiente', 'aprobado', 'rechazado'].map((f: string) => (
           <button
@@ -274,7 +268,6 @@ function SolicitudesSection() {
         ))}
       </div>
 
-      {/* Table */}
       <div className="bg-[#141419] border border-[rgba(244,242,236,0.08)]">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -311,7 +304,6 @@ function SolicitudesSection() {
         </div>
       </div>
 
-      {/* Detail modal */}
       {selected && (
         <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
           <div className="bg-[#141419] border border-[rgba(244,242,236,0.12)] w-full max-w-lg p-8 relative">
@@ -349,9 +341,9 @@ function SolicitudesSection() {
                 </>
               )}
               {selected.estado === 'aprobado' && !selected.link_pago_enviado && (
-                <button
-                  className="font-mono text-[10px] uppercase tracking-[0.14em] px-4 py-2 bg-[#C7A36D] text-[#0B0B0D] hover:bg-[#d4b07a] transition-colors"
-                >Enviar link de pago</button>
+                <button className="font-mono text-[10px] uppercase tracking-[0.14em] px-4 py-2 bg-[#C7A36D] text-[#0B0B0D] hover:bg-[#d4b07a] transition-colors">
+                  Enviar link de pago
+                </button>
               )}
             </div>
           </div>
@@ -440,15 +432,12 @@ function EstudiantesSection() {
         </div>
       </div>
 
-      {/* Detail modal */}
       {selected && (
         <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
           <div className="bg-[#141419] border border-[rgba(244,242,236,0.12)] w-full max-w-lg p-8 relative max-h-[90vh] overflow-y-auto">
             <button onClick={() => setSelected(null)} className="absolute top-4 right-4 text-[#B8B4AA] hover:text-[#F4F2EC]"><X className="w-5 h-5" /></button>
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#C7A36D] mb-2">Estudiante</p>
             <h2 className="font-serif text-2xl text-[#F4F2EC] mb-6">{selected.nombre}</h2>
-
-            {/* Info */}
             <div className="space-y-2 mb-6 text-sm">
               {[["Email", selected.email], ["Teléfono", selected.telefono || '—'], ["País", selected.pais], ["Inscripción", selected.fecha_inscripcion]].map(([k, v]) => (
                 <div key={k} className="flex gap-4">
@@ -461,8 +450,6 @@ function EstudiantesSection() {
                 <StatusBadge estado={selected.activo ? 'publicado' : 'borrador'} />
               </div>
             </div>
-
-            {/* Progress detail */}
             <div className="mb-6">
               <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#B8B4AA] mb-3">Progreso por módulo</p>
               <div className="space-y-2">
@@ -481,8 +468,6 @@ function EstudiantesSection() {
                 })}
               </div>
             </div>
-
-            {/* Controls */}
             <div className="border-t border-[rgba(244,242,236,0.08)] pt-5 space-y-3">
               <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#B8B4AA] mb-3">Acciones</p>
               <div className="flex flex-wrap gap-2">
@@ -573,16 +558,18 @@ function ModulosSection() {
   );
 }
 
+// ── MÓDULO EDITOR ────────────────────────────────────────────────
 function ModuloEditor({ modulo, onSave, onCancel }: any) {
-
-  const [scheduleMode, setScheduleMode] = useState(form.estado === 'programado');
-const minDateTime = new Date().toISOString().slice(0, 16);
-
+  // ✅ useState de form PRIMERO, scheduleMode lo inicializamos después
   const [form, setForm] = useState(modulo || {
     titulo: '', descripcion: '', duracion: '2 semanas', estado: 'borrador',
     objetivos: [''], ejercicio_titulo: '', ejercicio_descripcion: '',
-    ejercicio_deadline: '', contenidos: [],
+    ejercicio_deadline: '', contenidos: [], scheduledPublishAt: undefined,
   });
+
+  // ✅ Ahora sí podemos usar form.estado
+  const [scheduleMode, setScheduleMode] = useState(form.estado === 'programado');
+  const minDateTime = new Date().toISOString().slice(0, 16);
 
   const addObjetivo = () => setForm(f => ({ ...f, objetivos: [...(f.objetivos || []), ''] }));
   const updateObjetivo = (i, val) => setForm(f => { const o = [...(f.objetivos || [])]; o[i] = val; return { ...f, objetivos: o }; });
@@ -610,7 +597,7 @@ const minDateTime = new Date().toISOString().slice(0, 16);
       </div>
 
       <div className="space-y-6 max-w-3xl">
-        {/* Basic */}
+        {/* Información básica */}
         <div className="bg-[#141419] border border-[rgba(244,242,236,0.08)] p-6 space-y-4">
           <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#B8B4AA] mb-2">Información básica</p>
           <div>
@@ -623,87 +610,86 @@ const minDateTime = new Date().toISOString().slice(0, 16);
             <textarea rows={3} value={form.descripcion} onChange={e => setForm({...form, descripcion: e.target.value})}
               className="w-full bg-[#0B0B0D] border border-[rgba(244,242,236,0.1)] text-[#F4F2EC] px-4 py-3 text-sm focus:outline-none focus:border-[#C7A36D] transition-colors resize-none" />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[#B8B4AA] mb-2">Duración</label>
+            <input type="text" value={form.duracion} onChange={e => setForm({...form, duracion: e.target.value})}
+              className="w-full bg-[#0B0B0D] border border-[rgba(244,242,236,0.1)] text-[#F4F2EC] px-4 py-3 text-sm focus:outline-none focus:border-[#C7A36D] transition-colors" />
+          </div>
+        </div>
+
+        {/* ✅ Sección de publicación — reemplaza el <select> de Estado */}
+        <div className="bg-[#141419] border border-[rgba(244,242,236,0.08)] p-6 space-y-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#B8B4AA]">Publicación</p>
+
+          {/* Publicar inmediatamente */}
+          <div className="flex items-center justify-between">
             <div>
-              <label className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[#B8B4AA] mb-2">Duración</label>
-              <input type="text" value={form.duracion} onChange={e => setForm({...form, duracion: e.target.value})}
-                className="w-full bg-[#0B0B0D] border border-[rgba(244,242,236,0.1)] text-[#F4F2EC] px-4 py-3 text-sm focus:outline-none focus:border-[#C7A36D] transition-colors" />
+              <p className="text-sm text-[#F4F2EC]">Publicar inmediatamente</p>
+              <p className="text-xs text-[#B8B4AA] mt-0.5">El módulo quedará visible al guardar</p>
             </div>
-          // Y reemplazá el <div> del Estado con:
-<div className="col-span-2 border border-[rgba(244,242,236,0.08)] rounded p-4 space-y-4 bg-[rgba(244,242,236,0.02)]">
-  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#B8B4AA]">Publicación</p>
+            <input
+              type="checkbox"
+              checked={!scheduleMode && form.estado === 'publicado'}
+              onChange={(e) => {
+                setScheduleMode(false);
+                setForm({ ...form, estado: e.target.checked ? 'publicado' : 'borrador', scheduledPublishAt: undefined });
+              }}
+              className="w-4 h-4 accent-[#C7A36D]"
+            />
+          </div>
 
-  {/* Publicar inmediatamente */}
-  <div className="flex items-center justify-between">
-    <div>
-      <p className="text-sm text-[#F4F2EC]">Publicar inmediatamente</p>
-      <p className="text-xs text-[#B8B4AA] mt-0.5">El módulo quedará visible al guardar</p>
-    </div>
-    <input
-      type="checkbox"
-      checked={!scheduleMode && form.estado === 'publicado'}
-      onChange={(e) => {
-        setScheduleMode(false);
-        setForm({ ...form, estado: e.target.checked ? 'publicado' : 'borrador', scheduledPublishAt: undefined });
-      }}
-      className="w-4 h-4 accent-[#C7A36D]"
-    />
-  </div>
+          {/* Programar publicación */}
+          <div className="border-t border-[rgba(244,242,236,0.06)] pt-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-[#F4F2EC] flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-blue-400" />
+                  Programar publicación
+                </p>
+                <p className="text-xs text-[#B8B4AA] mt-0.5">Elige fecha y hora para publicar automáticamente</p>
+              </div>
+              <input
+                type="checkbox"
+                checked={scheduleMode}
+                onChange={(e) => {
+                  setScheduleMode(e.target.checked);
+                  setForm({
+                    ...form,
+                    estado: e.target.checked ? 'programado' : 'borrador',
+                    scheduledPublishAt: e.target.checked ? form.scheduledPublishAt : undefined,
+                  });
+                }}
+                className="w-4 h-4 accent-[#C7A36D]"
+              />
+            </div>
 
-  {/* Programar publicación */}
-  <div className="border-t border-[rgba(244,242,236,0.06)] pt-4 space-y-3">
-    <div className="flex items-center justify-between">
-      <div>
-        <p className="text-sm text-[#F4F2EC] flex items-center gap-2">
-          <Clock className="w-4 h-4 text-blue-400" />
-          Programar publicación
-        </p>
-        <p className="text-xs text-[#B8B4AA] mt-0.5">Elige fecha y hora para publicar automáticamente</p>
-      </div>
-      <input
-        type="checkbox"
-        checked={scheduleMode}
-        onChange={(e) => {
-          setScheduleMode(e.target.checked);
-          setForm({
-            ...form,
-            estado: e.target.checked ? 'programado' : 'borrador',
-            scheduledPublishAt: e.target.checked ? form.scheduledPublishAt : undefined,
-          });
-        }}
-        className="w-4 h-4 accent-[#C7A36D]"
-      />
-    </div>
-
-    {scheduleMode && (
-      <div>
-        <label className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[#B8B4AA] mb-1">
-          Fecha y hora de publicación
-        </label>
-        <input
-          type="datetime-local"
-          min={minDateTime}
-          value={form.scheduledPublishAt ? new Date(form.scheduledPublishAt).toISOString().slice(0, 16) : ''}
-          onChange={(e) => setForm({
-            ...form,
-            scheduledPublishAt: e.target.value ? new Date(e.target.value).toISOString() : undefined,
-          })}
-          className="w-full bg-[#0B0B0D] border border-[rgba(244,242,236,0.1)] text-[#F4F2EC] px-4 py-3 text-sm focus:outline-none focus:border-[#C7A36D] transition-colors"
-        />
-        {form.scheduledPublishAt && (
-          <p className="text-xs text-blue-400 mt-2 flex items-center gap-1">
-            <Calendar className="w-3 h-3" />
-            Se publicará el{' '}
-            {new Date(form.scheduledPublishAt).toLocaleString('es-ES', {
-              day: 'numeric', month: 'long', year: 'numeric',
-              hour: '2-digit', minute: '2-digit',
-            })}
-          </p>
-        )}
-      </div>
-    )}
-  </div>
-</div>
+            {scheduleMode && (
+              <div>
+                <label className="block font-mono text-[10px] uppercase tracking-[0.14em] text-[#B8B4AA] mb-1">
+                  Fecha y hora de publicación
+                </label>
+                <input
+                  type="datetime-local"
+                  min={minDateTime}
+                  value={form.scheduledPublishAt ? new Date(form.scheduledPublishAt).toISOString().slice(0, 16) : ''}
+                  onChange={(e) => setForm({
+                    ...form,
+                    scheduledPublishAt: e.target.value ? new Date(e.target.value).toISOString() : undefined,
+                  })}
+                  className="w-full bg-[#0B0B0D] border border-[rgba(244,242,236,0.1)] text-[#F4F2EC] px-4 py-3 text-sm focus:outline-none focus:border-[#C7A36D] transition-colors"
+                />
+                {form.scheduledPublishAt && (
+                  <p className="text-xs text-blue-400 mt-2 flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    Se publicará el{' '}
+                    {new Date(form.scheduledPublishAt).toLocaleString('es-ES', {
+                      day: 'numeric', month: 'long', year: 'numeric',
+                      hour: '2-digit', minute: '2-digit',
+                    })}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -928,7 +914,7 @@ function ConfiguracionSection() {
 
 // ── SHARED ───────────────────────────────────────────────────────
 function StatusBadge({ estado }: any) {
-  const map = {
+  const map: Record<string, string> = {
     pendiente: 'bg-yellow-400/10 text-yellow-400 border-yellow-400/20',
     aprobado: 'bg-green-400/10 text-green-400 border-green-400/20',
     rechazado: 'bg-red-400/10 text-red-400 border-red-400/20',
@@ -939,11 +925,13 @@ function StatusBadge({ estado }: any) {
     fallido: 'bg-red-400/10 text-red-400 border-red-400/20',
     publicado: 'bg-[rgba(199,163,109,0.15)] text-[#C7A36D] border-[rgba(199,163,109,0.3)]',
     borrador: 'bg-[rgba(244,242,236,0.05)] text-[#B8B4AA] border-[rgba(244,242,236,0.1)]',
+    programado: 'bg-blue-400/10 text-blue-400 border-blue-400/20',
   };
-  const labels = {
+  const labels: Record<string, string> = {
     no_pagado: 'Sin pago', pendiente: 'Pendiente', aprobado: 'Aprobado',
     rechazado: 'Rechazado', pagado: 'Pagado', cancelado: 'Cancelado',
-    completado: 'Completado', fallido: 'Fallido', publicado: 'Publicado', borrador: 'Borrador',
+    completado: 'Completado', fallido: 'Fallido', publicado: 'Publicado',
+    borrador: 'Borrador', programado: 'Programado',
   };
   return (
     <span className={`inline-block font-mono text-[10px] uppercase tracking-[0.14em] px-2.5 py-1 border ${map[estado] || map.borrador}`}>
