@@ -20,7 +20,7 @@ export const getModules = asyncHandler(async (req: Request, res: Response) => {
       }
     ];
   } else if (estado) {
-    where.estado = estado as string;
+    where.estado = estado as any;
   }
 
   const modulos = await prisma.modulo.findMany({
