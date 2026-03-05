@@ -18,7 +18,7 @@ Sistema completo de gestión de cursos online con autenticación, pagos, dashboa
 - CRUD de módulos del curso
 - Configuración de precios y Stripe
 - Notificaciones por email
-
+c
 ### Sistema de Pagos
 - Integración con Stripe
 - Webhooks para confirmación automática
