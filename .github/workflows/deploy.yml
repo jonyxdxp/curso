@@ -9,6 +9,7 @@ on:
       - 'index.html'
       - 'package.json'
       - 'vite.config.ts'
+  workflow_dispatch:  # 👈 esta línea habilita el botón manual
 
 jobs:
   deploy:
